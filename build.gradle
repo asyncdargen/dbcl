@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'ru.dargen'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+publishing {
+    repositories {
+        maven {
+            url "https://repo.starfarm.fun/public"
+            credentials {
+                username System.getenv("SF_REPO_USER")
+                password System.getenv("SF_REPO_PASSWORD")
+            }
+        }
+    }
+
+    publications {
+        version(MavenPublication) {
+            groupId project.group
+            artifactId "dbcl"
+            version project.version
+            artifact jar
+        }
+        live(MavenPublication) {
+            groupId project.group
+            artifactId "dbcl"
+            version "live"
+            artifact jar
+        }
+    }
+}
+
+tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
